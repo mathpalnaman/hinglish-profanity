@@ -1,0 +1,68 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/mathpalnaman/hinglish-profanity/src/wordlists/schema.json",
+  "title": "hinglish-profanity wordlist",
+  "description": "One wordlist per locale. Terms describe how offensive a word is; they never describe what to do about it.",
+  "type": "object",
+  "required": ["lang", "terms"],
+  "additionalProperties": false,
+  "properties": {
+    "$schema": { "type": "string" },
+    "lang": {
+      "description": "Which locale this list covers. hi-deva is matched before transliteration.",
+      "enum": ["en", "hi-deva", "hi-latin"]
+    },
+    "note": { "type": "string" },
+    "terms": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "phrases": {
+      "description": "Multi-word entries, matched across token boundaries.",
+      "type": "array",
+      "items": { "$ref": "#/$defs/entry" }
+    },
+    "excluded": {
+      "description": "Documentation only. Words deliberately NOT treated as profanity (sentiment, not profanity). Never loaded at runtime.",
+      "type": "object",
+      "required": ["terms"],
+      "additionalProperties": false,
+      "properties": {
+        "note": { "type": "string" },
+        "terms": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  },
+  "$defs": {
+    "entry": {
+      "type": "object",
+      "required": ["term", "severity"],
+      "additionalProperties": false,
+      "properties": {
+        "term": {
+          "description": "Canonical spelling. Must survive the normalizer unchanged, or it can never match.",
+          "type": "string",
+          "minLength": 2
+        },
+        "severity": {
+          "description": "How offensive the WORD is. 4 = sexual/incest abuse and slurs, 3 = strong profanity, 2 = crude but common, 1 = mild/tone only. Never a statement about confidence, and never an instruction to block.",
+          "type": "integer",
+          "enum": [1, 2, 3, 4]
+        },
+        "wholeTokenOnly": {
+          "description": "Only match as a complete token, never inside a longer word. Required for short stems: 'ass' in 'assignment', 'gand' in 'Gandhi'.",
+          "type": "boolean"
+        },
+        "ambiguous": {
+          "description": "The term collides with innocent usage ('bc' = before Christ, 'laura' = a name). Matches on it are reported with confidence: 'low'.",
+          "type": "boolean"
+        },
+        "note": {
+          "description": "Why this entry is tricky. Documentation only; never used at runtime.",
+          "type": "string"
+        }
+      }
+    }
+  }
+}

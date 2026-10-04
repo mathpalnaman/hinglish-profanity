@@ -37,7 +37,9 @@ mistakes become breaking changes, so reasoning has to be visible.
 ## Architecture
 
 - **Wordlists**: separate JSON per locale — `en`, `hi-deva`, `hi-latin`. Each
-  term tagged `severity: "mild" | "severe"`.
+  term tagged `severity: 1 | 2 | 3 | 4` (4 = sexual/incest abuse and slurs,
+  3 = strong profanity, 2 = crude but common, 1 = mild/tone only), plus the
+  optional `wholeTokenOnly` and `ambiguous` flags. Schema: `src/wordlists/schema.json`.
 - **Normalizer pipeline** (pluggable, ordered):
   1. lowercase
   2. NFKD + strip **Latin** combining marks (U+0300–U+036F) only
@@ -58,19 +60,21 @@ type Result = {
   matches: Array<{
     term: string;          // wordlist entry
     matchedText: string;   // what appeared in the input
-    severity: "mild" | "severe";     // property of the WORD
+    severity: 1 | 2 | 3 | 4;         // property of the WORD
     confidence: "high" | "low";      // property of the MATCH
-    method: "exact" | "spaced" | "leet" | "vowel-drop" | "homoglyph";
+    method: "exact" | "spaced" | "leet" | "phrase" | "vowel-drop";
     lang: "en" | "hi-deva" | "hi-latin";
     index: number;
+    endIndex: number;
   }>;
 };
 ```
 
-`severity` and `confidence` stay orthogonal. Do not merge them into one enum
-(`severe-review`): severity describes the word, confidence describes the match,
-and a combined enum grows as 2×N and breaks every consumer `switch` on each
-addition. Consumers who want a single token derive `` `${severity}:${confidence}` ``
+`severity` and `confidence` stay orthogonal. Do not merge them into one scale
+(`severe-review`, or a single 1–4 "must block" ladder): severity describes the
+word, confidence describes the match, and a combined scale cannot distinguish
+`damn` (barely offensive, certainly meant) from `laura` (vile if meant, usually
+a name). Consumers who want a single token derive `` `${severity}:${confidence}` ``
 in their own code.
 
 ---

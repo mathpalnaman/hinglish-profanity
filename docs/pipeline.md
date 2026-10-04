@@ -17,15 +17,17 @@ flowchart TD
     D --> D1["1. lowercase"]
     D1 --> D2["2. NFKD + strip Latin marks<br/>U+0300–U+036F only<br/><i>never Devanagari matras</i>"]
     D2 --> D3["3. Devanagari → Latin<br/>transliteration"]
-    D3 --> D4["4. collapse repeated chars<br/>LUNDDD → lund"]
-    D4 --> D5["5. leet decode<br/>0→o 3→e 1→i/l @→a $→s"]
-    D5 --> E["<b>Two outputs, both with offset maps</b>"]
+    D3 --> D4["4. collapse runs of 3+<br/>LUNDDD → lund<br/><i>doubles kept: chot ≠ choot</i>"]
+    D4 --> D5["5. leet decode<br/>0→o 3→e 4→a @→a $→s<br/>1 · l · i · | all fold to i"]
+    D5 --> D6["6. mask chars<br/>* # & ! between letters<br/>→ one wildcard<br/><i>L*** has none: no letter after</i>"]
+    D6 --> E["<b>Two outputs, both with offset maps</b>"]
 
     E --> E1["<b>tokens[]</b><br/>boundaries kept<br/>for wholeTokenOnly + phrases"]
     E --> E2["<b>stripped string</b><br/>all separators gone<br/>for spaced variants"]
 
     E1 --> F1["<b>exact</b><br/>token === term"]
     E1 --> F2["<b>phrase</b><br/>multi-word entries"]
+    E1 --> F5["<b>token runs</b><br/>consecutive tokens joined<br/>l·u·n·d → lund<br/><i>terms of 4+ chars only</i>"]
     E2 --> F3["<b>spaced</b><br/>substring scan<br/>skips wholeTokenOnly terms"]
     E1 --> F4["<b>vowel-drop</b><br/>opt-in, confidence: low"]
 
@@ -33,9 +35,13 @@ flowchart TD
     F2 --> G
     F3 --> G
     F4 --> G
+    F5 --> G
     C --> G
 
-    G --> H{"overlaps an<br/>allowlist phrase?"}
+    G --> G2["dedupe: longest match wins<br/>motherfucker swallows fuck"]
+    G2 --> H
+
+    H{"overlaps an<br/>allowlist phrase?"}
     H -- yes --> H1["discarded"]
     H -- no --> I["map cleaned positions<br/>back to original offsets"]
 
@@ -101,3 +107,16 @@ Transliteration is lossy in a way that breaks both directions:
 
 So hi-deva terms are matched against the raw Devanagari, NFC-composed. Only then
 does the text get transliterated for the benefit of the Latin wordlists.
+
+## Rules the corpus forced
+
+Each of these exists because a test case failed, not because it seemed sensible.
+
+| rule | without it |
+| --- | --- |
+| collapse only runs of **3+** | `chot` (injury) = `choot`, `chhod` (to leave) = `chod` |
+| a doubled letter at a token's end collapses **only if 4+ chars remain** | `ass` → `as`, matching the English word "as" |
+| cross-token matching needs a term of **4+ chars** | `b.a.k.w.a.s` reports `ass` from its trailing tokens |
+| `!` is punctuation in the leet map, a mask char between letters | `lund!!!` normalizes to `lundi` and is missed |
+| spaced variants match **token runs**, not the stripped string | `wholeTokenOnly` terms like `lund` lose every spaced form |
+| wordlist terms run through the same normalizer | `choot` in the list can never match anything |
