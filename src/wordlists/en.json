@@ -1,0 +1,164 @@
+{
+  "$schema": "./schema.json",
+  "lang": "en",
+  "terms": [
+    {
+      "term": "fuck",
+      "severity": 3
+    },
+    {
+      "term": "motherfucker",
+      "severity": 4
+    },
+    {
+      "term": "shit",
+      "severity": 2,
+      "wholeTokenOnly": true,
+      "note": "substring of 'Shitij', 'Dikshit'"
+    },
+    {
+      "term": "bullshit",
+      "severity": 2
+    },
+    {
+      "term": "asshole",
+      "severity": 3
+    },
+    {
+      "term": "ass",
+      "severity": 2,
+      "wholeTokenOnly": true,
+      "note": "substring of 'pass', 'class', 'assignment', 'assess', 'assassin', 'assemble'"
+    },
+    {
+      "term": "bitch",
+      "severity": 3
+    },
+    {
+      "term": "bastard",
+      "severity": 3
+    },
+    {
+      "term": "cunt",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "pussy",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "also 'cat'; 'pussycat'"
+    },
+    {
+      "term": "dick",
+      "severity": 2,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "given name (Dick), 'Dickens', 'Dikshit'"
+    },
+    {
+      "term": "cock",
+      "severity": 2,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "'cocktail', 'cockpit', 'peacock'"
+    },
+    {
+      "term": "whore",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "slut",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "prick",
+      "severity": 2,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "'pinprick', needle prick"
+    },
+    {
+      "term": "wanker",
+      "severity": 2
+    },
+    {
+      "term": "twat",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "faggot",
+      "severity": 4,
+      "note": "slur"
+    },
+    {
+      "term": "retard",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "'retardant', 'flame retardant'"
+    },
+    {
+      "term": "damn",
+      "severity": 1,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "crap",
+      "severity": 1,
+      "wholeTokenOnly": true,
+      "note": "substring of 'scrap', 'scrapbook'"
+    },
+    {
+      "term": "bloody",
+      "severity": 1,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "literal sense: 'bloody nose'"
+    },
+    {
+      "term": "bugger",
+      "severity": 1
+    },
+    {
+      "term": "piss",
+      "severity": 1,
+      "wholeTokenOnly": true
+    }
+  ],
+  "phrases": [
+    {
+      "term": "piece of shit",
+      "severity": 2
+    },
+    {
+      "term": "son of a bitch",
+      "severity": 3
+    },
+    {
+      "term": "shut up",
+      "severity": 1
+    }
+  ],
+  "excluded": {
+    "note": "Deliberately NOT profanity. Detecting these is sentiment/abuse classification, a different problem. Consumers who want them can pass extraWords.",
+    "terms": [
+      "trash",
+      "trash person",
+      "shitguy",
+      "illiterate",
+      "stupid",
+      "useless",
+      "worst",
+      "bakwas",
+      "waste",
+      "fraud",
+      "idiot",
+      "nonsense"
+    ]
+  }
+}

@@ -1,0 +1,305 @@
+{
+  "$schema": "./schema.json",
+  "lang": "hi-latin",
+  "terms": [
+    {
+      "term": "chutiya",
+      "severity": 4
+    },
+    {
+      "term": "chutia",
+      "severity": 4
+    },
+    {
+      "term": "chootiya",
+      "severity": 4
+    },
+    {
+      "term": "chutiye",
+      "severity": 4
+    },
+    {
+      "term": "chut",
+      "severity": 4,
+      "wholeTokenOnly": true,
+      "note": "substring of 'chutki', 'chutney'"
+    },
+    {
+      "term": "choot",
+      "severity": 4,
+      "wholeTokenOnly": true,
+      "note": "collapses to 'chot' — prefix of 'choti', 'chota', 'chot' (injury)"
+    },
+    {
+      "term": "lund",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "note": "surname; also near 'land'/'laundry' if vowel-drop is on"
+    },
+    {
+      "term": "loda",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "lauda",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "Lauda is a surname (Niki Lauda); Latin 'lauda'"
+    },
+    {
+      "term": "lawda",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "laura",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "common given name — will flag real people named Laura"
+    },
+    {
+      "term": "lode",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "English 'lode' (ore deposit), 'lodge' typo"
+    },
+    {
+      "term": "lodu",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "bhosdika",
+      "severity": 4
+    },
+    {
+      "term": "bhosdike",
+      "severity": 4
+    },
+    {
+      "term": "bhosda",
+      "severity": 4
+    },
+    {
+      "term": "bhosdi",
+      "severity": 4
+    },
+    {
+      "term": "bsdk",
+      "severity": 4,
+      "wholeTokenOnly": true,
+      "note": "abbreviation"
+    },
+    {
+      "term": "bsdka",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gandu",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gandva",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gandwa",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gndu",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "note": "vowel-dropped spelling, listed explicitly so vowelDrop need not be on"
+    },
+    {
+      "term": "gndva",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gndwa",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gaand",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gand",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "note": "substring of 'Gandhi', 'ganda', 'gandagi'"
+    },
+    {
+      "term": "madarchod",
+      "severity": 4
+    },
+    {
+      "term": "masdarchod",
+      "severity": 4
+    },
+    {
+      "term": "maderchod",
+      "severity": 4
+    },
+    {
+      "term": "madarjaat",
+      "severity": 4
+    },
+    {
+      "term": "madarjat",
+      "severity": 4
+    },
+    {
+      "term": "bhenchod",
+      "severity": 4
+    },
+    {
+      "term": "behenchod",
+      "severity": 4
+    },
+    {
+      "term": "bhenchd",
+      "severity": 4
+    },
+    {
+      "term": "chodu",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "chod",
+      "severity": 4,
+      "wholeTokenOnly": true,
+      "note": "substring of 'chodna', 'chhod' (to leave) — different word, high FP risk"
+    },
+    {
+      "term": "mc",
+      "severity": 4,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "MC = master of ceremonies, MC Stan, initials"
+    },
+    {
+      "term": "bc",
+      "severity": 4,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "BC = before Christ, B.C., 'because' shorthand"
+    },
+    {
+      "term": "bkl",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "mkl",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "randi",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "rand",
+      "severity": 4,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "English 'rand' (currency, Math.rand)"
+    },
+    {
+      "term": "jhaat",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "jhant",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "harami",
+      "severity": 2
+    },
+    {
+      "term": "haramkhor",
+      "severity": 2
+    },
+    {
+      "term": "kamina",
+      "severity": 1
+    },
+    {
+      "term": "kamine",
+      "severity": 1
+    },
+    {
+      "term": "kutti",
+      "severity": 2,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "saala",
+      "severity": 1,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "also means brother-in-law; used affectionately"
+    },
+    {
+      "term": "sala",
+      "severity": 1,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "also 'saala'; 'sala' = room (Spanish/Italian), part of names"
+    },
+    {
+      "term": "gaandu",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "gaandoo",
+      "severity": 3,
+      "wholeTokenOnly": true
+    }
+  ],
+  "phrases": [
+    {
+      "term": "bhen ke lode",
+      "severity": 4
+    },
+    {
+      "term": "behen ke lode",
+      "severity": 4
+    },
+    {
+      "term": "ma ke lode",
+      "severity": 4
+    },
+    {
+      "term": "maa ke lode",
+      "severity": 4
+    },
+    {
+      "term": "bhen ke laude",
+      "severity": 4
+    },
+    {
+      "term": "baap ke lode",
+      "severity": 4
+    }
+  ]
+}

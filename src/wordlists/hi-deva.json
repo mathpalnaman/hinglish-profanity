@@ -1,0 +1,154 @@
+{
+  "$schema": "./schema.json",
+  "lang": "hi-deva",
+  "note": "Matched on Devanagari text BEFORE transliteration. All terms stored NFC — nukta forms (ड़ U+095C vs ड + ़ U+0921 U+093C) must be composed or lookups miss.",
+  "terms": [
+    {
+      "term": "चूतिया",
+      "severity": 4
+    },
+    {
+      "term": "चुतिया",
+      "severity": 4
+    },
+    {
+      "term": "चूत",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "चुत",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "लंड",
+      "severity": 3,
+      "wholeTokenOnly": true,
+      "note": "distinct from लैंड (English 'land')"
+    },
+    {
+      "term": "लण्ड",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "लौड़ा",
+      "severity": 3
+    },
+    {
+      "term": "लोड़ा",
+      "severity": 3
+    },
+    {
+      "term": "लौड़े",
+      "severity": 3
+    },
+    {
+      "term": "भोसड़ी",
+      "severity": 4
+    },
+    {
+      "term": "भोसड़ीके",
+      "severity": 4
+    },
+    {
+      "term": "भोसड़ीका",
+      "severity": 4
+    },
+    {
+      "term": "भोसड़ा",
+      "severity": 4
+    },
+    {
+      "term": "गांडू",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "गाण्डू",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "गांड",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "गाँड",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "मादरचोद",
+      "severity": 4
+    },
+    {
+      "term": "भेनचोद",
+      "severity": 4
+    },
+    {
+      "term": "बहनचोद",
+      "severity": 4
+    },
+    {
+      "term": "बहन के लोड़े",
+      "severity": 4
+    },
+    {
+      "term": "मादरजात",
+      "severity": 4
+    },
+    {
+      "term": "रंडी",
+      "severity": 4,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "झांट",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "झाँट",
+      "severity": 3,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "हरामी",
+      "severity": 2
+    },
+    {
+      "term": "हरामखोर",
+      "severity": 2
+    },
+    {
+      "term": "कमीना",
+      "severity": 1
+    },
+    {
+      "term": "कमीने",
+      "severity": 1
+    },
+    {
+      "term": "कुत्ती",
+      "severity": 2,
+      "wholeTokenOnly": true
+    },
+    {
+      "term": "साला",
+      "severity": 1,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "also brother-in-law"
+    },
+    {
+      "term": "कुत्ता",
+      "severity": 1,
+      "wholeTokenOnly": true,
+      "ambiguous": true,
+      "note": "literally 'dog' — usually not an insult"
+    }
+  ]
+}

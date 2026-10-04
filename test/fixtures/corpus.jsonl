@@ -1,0 +1,122 @@
+{"id": "pos-001", "input": "LUND ka astrologer hai", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "real", "note": "uppercase; surname collision"}
+{"id": "pos-002", "input": "Fuck this man did not know anything about kundali", "expect": [{"term": "fuck", "lang": "en", "severity": 3}], "source": "real", "note": "sentence-initial, capitalized"}
+{"id": "pos-003", "input": "l u n d ka astrologer hai", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "synthetic", "note": "spaced variant of pos-001 — REVIEW"}
+{"id": "pos-004", "input": "l.u.n.d ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "synthetic", "note": "dot-separated — REVIEW"}
+{"id": "pos-005", "input": "LUNDDD ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "synthetic", "note": "repeat collapse — REVIEW"}
+{"id": "pos-006", "input": "लंड का एस्ट्रोलॉजर है", "expect": [{"term": "लंड", "lang": "hi-deva", "severity": 3}], "source": "synthetic", "note": "Devanagari anusvara form; match pre-translit"}
+{"id": "pos-007", "input": "f u c k this man", "expect": [{"term": "fuck", "lang": "en", "severity": 3}], "source": "synthetic", "note": "spaced — REVIEW"}
+{"id": "pos-008", "input": "fuuuuck this man", "expect": [{"term": "fuck", "lang": "en", "severity": 3}], "source": "synthetic", "note": "repeat collapse — REVIEW"}
+{"id": "pos-009", "input": "Fucking waste of time", "expect": [{"term": "fuck", "lang": "en", "severity": 3}], "source": "synthetic", "note": "inflection via whole-string scan — REVIEW"}
+{"id": "pos-010", "input": "Dr. Lund was helpful", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "spec", "note": "no allowlist → match; pair with neg-038"}
+{"id": "neg-001", "input": "Bakwas", "expect": [], "source": "real", "note": "harsh, not profane (decided)"}
+{"id": "neg-002", "input": "Bakwaas", "expect": [], "source": "real"}
+{"id": "neg-003", "input": "Bakwas hai", "expect": [], "source": "real"}
+{"id": "neg-004", "input": "Very bad . Way of talking . Kuch v bakwas kr deta . Sare ans me ek hi chiz", "expect": [], "source": "real", "note": "long hinglish, punctuation"}
+{"id": "neg-005", "input": "Sbse worst", "expect": [], "source": "real", "note": "sentiment not profanity"}
+{"id": "neg-006", "input": "Worst", "expect": [], "source": "real"}
+{"id": "neg-007", "input": "Uselessss!!!!", "expect": [], "source": "real", "note": "repeat collapse + punctuation"}
+{"id": "neg-008", "input": "May be jusylt because it's free. He is passing time.", "expect": [], "source": "real", "note": "'passing' contains 'ass'; 'because' vs 'bc'"}
+{"id": "neg-009", "input": "I found everything he said to be almost 100% correct and the same has been happening in my life till date.And I am very happy with the predictions he made about the future.🙏🏻🙌🏻", "expect": [], "source": "real", "note": "digits under leet map, emoji skin tone, no space after period"}
+{"id": "neg-010", "input": "jitendra kumar sharma sir se Contact kr bohot acha experience hai unka sir ji ka 🥰", "expect": [], "source": "real", "note": "Indian name + emoji"}
+{"id": "neg-011", "input": "Koi Kam Ka Nahi Hain app", "expect": [], "source": "real"}
+{"id": "neg-012", "input": "Chat hua hi nahi", "expect": [], "source": "real"}
+{"id": "neg-013", "input": "Very good astro mam , bahut achi tarah se describe Kiya", "expect": [], "source": "real"}
+{"id": "neg-014", "input": "Good 👍 guidance god bless you", "expect": [], "source": "real"}
+{"id": "neg-015", "input": "Bhout Asha", "expect": [], "source": "real"}
+{"id": "neg-016", "input": "Thik h", "expect": [], "source": "real", "note": "single-letter token"}
+{"id": "neg-017", "input": "Ache h guru ji", "expect": [], "source": "real"}
+{"id": "neg-018", "input": "Thanks didi", "expect": [], "source": "real"}
+{"id": "neg-019", "input": "Knowledgeable and experience astrologer", "expect": [], "source": "real"}
+{"id": "neg-020", "input": "Good astro in world all are connected with the sir", "expect": [], "source": "real"}
+{"id": "neg-021", "input": "Please say the remaining part", "expect": [], "source": "real"}
+{"id": "neg-022", "input": "", "expect": [], "source": "synthetic", "note": "empty string"}
+{"id": "neg-023", "input": "L*** ka astrologer hai", "expect": [], "source": "real", "note": "manually masked; '*' not wildcard"}
+{"id": "neg-024", "input": "Mera Makan bn jaye yahi eccha hai. Ramady bahut choti hai.", "expect": [], "source": "real", "note": "'choti' vs collapsed 'choot'"}
+{"id": "neg-025", "input": "Mere relationship ke bare me bahut ji shandar bataya. Chota sa upay he jo ki bahut easy hai. Thanks Guruji ❤️❤️🥰🥰", "expect": [], "source": "real", "note": "'chota' vs collapsed 'choot'; emoji + VS16"}
+{"id": "neg-026", "input": "Sirf time pass Kiya farud", "expect": [], "source": "real", "note": "'pass' contains 'ass'"}
+{"id": "neg-027", "input": "Time pass only 😌", "expect": [], "source": "real"}
+{"id": "neg-028", "input": "Best astrologer i have cunreetly experienced only tells true information", "expect": [], "source": "real", "note": "typo starts with 'cun'"}
+{"id": "neg-029", "input": "बहुत कुछ अच्छा बताया", "expect": [], "source": "real", "note": "hi-deva negative; translit check"}
+{"id": "neg-030", "input": "Very much satisfied with pandit ji Abhishek Kaushal.Pandit Ji is very knowledgeable, humble, and professional.", "expect": [], "source": "real", "note": "names; no space after period"}
+{"id": "neg-031", "input": "Bilkul sahi kaha sir me protest ki bimari se pidit hu. Aapki remedy me kr lunga sir.", "expect": [], "source": "real"}
+{"id": "neg-032", "input": "Bhout hi karab raha", "expect": [], "source": "real", "note": "sentiment not profanity"}
+{"id": "neg-033", "input": "Good the best astrologer in world \nI was recommended contact The this one astrologer the best", "expect": [], "source": "real", "note": "newline separator"}
+{"id": "neg-034", "input": "Respected Sir, I saw your Google reviews in Rudra Jyotish Kendra Indore. Your results are so highly. Please 🥺 help me about my health issues.", "expect": [], "source": "real", "note": "proper nouns"}
+{"id": "neg-035", "input": "Waste my 5 min... No reply", "expect": [], "source": "real", "note": "digit under leet map"}
+{"id": "neg-036", "input": "Rahul Bhandari", "options": {"allowlist": ["bhandari"]}, "expect": [], "source": "spec", "note": "surname collision"}
+{"id": "neg-037", "input": "Shitij was very helpful", "options": {"allowlist": ["shitij"]}, "expect": [], "source": "spec", "note": "contains 'shit'"}
+{"id": "neg-038", "input": "Dr. Lund was helpful", "options": {"allowlist": ["dr lund"]}, "expect": [], "source": "spec", "note": "phrase allowlist; pair with pos-010"}
+{"id": "neg-039", "input": "data analysis report", "expect": [], "source": "spec", "note": "'anal' substring, no allowlist"}
+{"id": "neg-040", "input": "Flight will land at 5", "expect": [], "source": "synthetic", "note": "Latin 'land' must not hit hi-latin 'lund'"}
+{"id": "neg-041", "input": "Mr Dikshit guided me well", "options": {"allowlist": ["dikshit"]}, "expect": [], "source": "synthetic", "note": "surname contains 'shit' — REVIEW"}
+{"id": "neg-042", "input": "Gandhi ji ki tarah shant", "expect": [], "source": "synthetic", "note": "contains 'gand'; must pass without allowlist — REVIEW"}
+{"id": "err-001", "input": null, "expect": {"throws": "TypeError"}, "source": "real", "note": "rating-only review; consumer skips nulls"}
+{"id": "pos-011", "input": "लण्ड का एस्ट्रोलॉजर है", "expect": [{"term": "लण्ड", "lang": "hi-deva", "severity": 3}], "source": "user", "note": "Devanagari half-na (ण्) spelling"}
+{"id": "neg-043", "input": "फ्लाइट 5 बजे लैंड होगी", "expect": [], "source": "user", "note": "लैंड (English 'land') ≠ लंड; ै matra must survive normalizer"}
+{"id": "neg-044", "input": "Mera laundry ka kapda abhi tak nahi aaya.", "expect": [], "source": "user", "note": "'laundry' → vowel-dropped 'lndry' contains 'lnd' = 'lund'"}
+{"id": "neg-045", "input": "I bought a new piece of land today.", "expect": [], "source": "user", "note": "'land' vs 'lund'"}
+{"id": "neg-046", "input": "Bhai mujhe apna assignment dikha de.", "expect": [], "source": "user", "note": "'ass'"}
+{"id": "neg-047", "input": "Mera computer bahut slow chal raha hai.", "expect": [], "source": "user"}
+{"id": "neg-048", "input": "He was successfully assassinated in the game.", "expect": [], "source": "user", "note": "'ass' twice"}
+{"id": "neg-049", "input": "Mujhe ye document analyze karna hai.", "expect": [], "source": "user", "note": "'anal'"}
+{"id": "neg-050", "input": "She is taking classes in glass blowing.", "expect": [], "source": "user", "note": "'ass' twice"}
+{"id": "neg-051", "input": "The scrap metal was collected today.", "expect": [], "source": "user", "note": "'crap'"}
+{"id": "neg-052", "input": "Can you pass me the cocktail sauce?", "expect": [], "source": "user", "note": "'ass', 'cock'"}
+{"id": "neg-053", "input": "This app is an absolute classic.", "expect": [], "source": "user", "note": "'ass'"}
+{"id": "neg-054", "input": "I need to assemble the furniture.", "expect": [], "source": "user", "note": "'ass'"}
+{"id": "neg-055", "input": "The therapeutic benefits are great.", "expect": [], "source": "user", "note": "'rape'"}
+{"id": "neg-056", "input": "We need to assess the situation.", "expect": [], "source": "user", "note": "'ass'"}
+{"id": "neg-057", "input": "He is an analytical thinker.", "expect": [], "source": "user", "note": "'anal'"}
+{"id": "neg-058", "input": "Button dabane par awaz aati hai.", "expect": [], "source": "user", "note": "'butt'"}
+{"id": "neg-059", "input": "b@kwas app hai", "expect": [], "source": "user", "note": "obfuscated but 'bakwas' is not profane"}
+{"id": "neg-060", "input": "st0pid astrologer", "expect": [], "source": "user", "note": "obfuscated but 'stupid' is not profane"}
+{"id": "neg-061", "input": "bakkkwwaaasss", "expect": [], "source": "user", "note": "duplication; still not profane"}
+{"id": "neg-062", "input": "b.a.k.w.a.s", "expect": [], "source": "user", "note": "delimiters; still not profane"}
+{"id": "neg-063", "input": "bkws app", "expect": [], "source": "user", "note": "vowel-dropped; still not profane"}
+{"id": "pos-012", "input": "l*nd ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "user", "note": "single-char mask; CONFLICTS with neg-023 — see open question"}
+{"id": "pos-013", "input": "lu#d ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "user", "note": "symbol substitution, same conflict"}
+{"id": "pos-014", "input": "lund!!! ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "synthetic", "note": "trailing punctuation"}
+{"id": "pos-015", "input": "l_u_n_d ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "synthetic", "note": "underscore delimiter"}
+{"id": "pos-016", "input": "lu​nd ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "user", "note": "zero-width space U+200B"}
+{"id": "pos-017", "input": "1und ka astrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "user", "note": "leet 1→l; NOT in your leet map (1→i only)"}
+{"id": "pos-018", "input": "fυck this man", "expect": [{"term": "fuck", "lang": "en", "severity": 3}], "source": "user", "phase": "day2", "note": "Greek upsilon homoglyph — needs confusable map"}
+{"id": "pos-019", "input": "1und ka аstrologer", "expect": [{"term": "lund", "lang": "hi-latin", "severity": 3}], "source": "user", "phase": "day2", "note": "Cyrillic а in surrounding text; term itself Latin"}
+{"id": "pos-020", "input": "fck this man", "expect": [{"term": "fuck", "lang": "en", "severity": 3}], "source": "user", "phase": "day2", "note": "vowel-dropped; see neg-044 conflict"}
+{"id": "pos-021", "input": "kya chutiya aadmi hai ye", "expect": [{"term": "chutiya", "lang": "hi-latin", "severity": 4}], "source": "user"}
+{"id": "pos-022", "input": "isko lawda kuch ni aata", "expect": [{"term": "lawda", "lang": "hi-latin", "severity": 3}], "source": "user"}
+{"id": "pos-023", "input": "isko loda kuch ni aata", "expect": [{"term": "loda", "lang": "hi-latin", "severity": 3}], "source": "user"}
+{"id": "pos-024", "input": "isko lauda kuch ni aata", "expect": [{"term": "lauda", "lang": "hi-latin", "severity": 3, "confidence": "low"}], "source": "user", "note": "ambiguous term (surname Lauda)"}
+{"id": "pos-025", "input": "isko laura kuch ni aata", "expect": [{"term": "laura", "lang": "hi-latin", "severity": 3, "confidence": "low"}], "source": "user", "note": "ambiguous term (given name Laura)"}
+{"id": "pos-026", "input": "ye bsdk kuch bhi bolta ya", "expect": [{"term": "bsdk", "lang": "hi-latin", "severity": 4}], "source": "user"}
+{"id": "pos-027", "input": "ye bhosdika kuch bhi bolta", "expect": [{"term": "bhosdika", "lang": "hi-latin", "severity": 4}], "source": "user"}
+{"id": "pos-028", "input": "gandu insaan", "expect": [{"term": "gandu", "lang": "hi-latin", "severity": 3}], "source": "user"}
+{"id": "pos-029", "input": "gndwa insaan", "expect": [{"term": "gndwa", "lang": "hi-latin", "severity": 3}], "source": "user", "note": "vowel-dropped spelling listed explicitly"}
+{"id": "pos-030", "input": "mc astrologer hai ye", "expect": [{"term": "mc", "lang": "hi-latin", "severity": 4, "confidence": "low"}], "source": "user", "note": "ambiguous abbreviation"}
+{"id": "pos-031", "input": "bkl kuch nahi aata", "expect": [{"term": "bkl", "lang": "hi-latin", "severity": 4}], "source": "user"}
+{"id": "pos-032", "input": "bhen ke lode astrologer", "expect": [{"term": "bhen ke lode", "lang": "hi-latin", "severity": 4}], "source": "user", "note": "phrase spanning tokens"}
+{"id": "pos-033", "input": "ye kya bhang bhosda hai", "expect": [{"term": "bhosda", "lang": "hi-latin", "severity": 4}], "source": "user", "note": "'bhang' alone is a substance, not profanity"}
+{"id": "pos-034", "input": "piece of shit astro", "expect": [{"term": "piece of shit", "lang": "en", "severity": 2}], "source": "user"}
+{"id": "pos-035", "input": "such a pussy", "expect": [{"term": "pussy", "lang": "en", "severity": 3, "confidence": "low"}], "source": "user", "note": "ambiguous term"}
+{"id": "pos-036", "input": "what an asshole", "expect": [{"term": "asshole", "lang": "en", "severity": 3}], "source": "user"}
+{"id": "pos-037", "input": "madarchod astrologer", "expect": [{"term": "madarchod", "lang": "hi-latin", "severity": 4}], "source": "user"}
+{"id": "pos-038", "input": "ये चूतिया आदमी है", "expect": [{"term": "चूतिया", "lang": "hi-deva", "severity": 4}], "source": "user"}
+{"id": "pos-039", "input": "भोसड़ीके कुछ नहीं आता", "expect": [{"term": "भोसड़ीके", "lang": "hi-deva", "severity": 4}], "source": "user", "note": "nukta ड़ — NFC vs decomposed"}
+{"id": "neg-064", "input": "shitguy trash person illetrate", "expect": [], "source": "user", "note": "insults, not profanity — see en.json excluded list"}
+{"id": "neg-065", "input": "Laura was very helpful", "options": {"allowlist": ["laura"]}, "expect": [], "source": "user", "note": "name; needs allowlist because 'laura' is a listed term"}
+{"id": "neg-066", "input": "MC Stan ka fan hu", "options": {"allowlist": ["mc stan"]}, "expect": [], "source": "user", "note": "ambiguous abbreviation, phrase allowlist"}
+{"id": "neg-067", "input": "Meeting is in 500 BC history class", "expect": [{"term": "bc", "lang": "hi-latin", "severity": 4, "confidence": "low"}], "source": "user", "note": "HONEST FAILURE: 'bc' cannot be disambiguated without context"}
+{"id": "neg-068", "input": "Niki Lauda ki biography", "options": {"allowlist": ["niki lauda"]}, "expect": [], "source": "user"}
+{"id": "neg-069", "input": "Mujhe chot lagi hai", "expect": [], "source": "user", "note": "'chot' = injury; collapsed 'choot' collides"}
+{"id": "neg-070", "input": "Ganda mausam hai aaj", "expect": [], "source": "user", "note": "'ganda' = dirty, not profanity; contains 'gand'"}
+{"id": "neg-071", "input": "Chutney bahut acchi thi", "expect": [], "source": "user", "note": "contains 'chut'"}
+{"id": "neg-072", "input": "Ek chutki sindoor", "expect": [], "source": "user", "note": "contains 'chut'"}
+{"id": "neg-073", "input": "Usne mujhe chhod diya", "expect": [], "source": "user", "note": "'chhod' = to leave; near 'chod'"}
+{"id": "neg-074", "input": "Flame retardant material", "expect": [], "source": "user", "note": "contains 'retard'"}
+{"id": "neg-075", "input": "Math.random() aur rand() use kiya", "expect": [], "source": "user", "note": "contains 'rand'"}
+{"id":"pos-040","input":"GAANDU insaan hai","expect":[{"term":"gaandu","lang":"hi-latin","severity":3}],"source":"audit","note":"spelling variant missed in first audit sweep"}
+{"id":"pos-041","input":"lundd ka astrologer","expect":[{"term":"lund","lang":"hi-latin","severity":3}],"source":"audit","note":"token-final doubled letter"}
+{"id":"pos-042","input":"what a b!tch","expect":[{"term":"bitch","lang":"en","severity":3}],"source":"audit","note":"'!' as mask char between letters"}
+{"id":"pos-043","input":"chutiyaa aadmi","expect":[{"term":"chutiya","lang":"hi-latin","severity":4}],"source":"audit","note":"token-final doubled vowel"}
+{"id":"neg-076","input":"Uselessss!!!! time pass only","expect":[],"source":"audit","note":"'!' run not flanked by letters; 'pass' not 'piss'"}
+{"id":"neg-077","input":"All the classes were full and I will miss them","expect":[],"source":"audit","note":"token-final doubles: all/full/miss/classes must not reach 'ass'"}
+{"id":"neg-078","input":"Got all my answers as well","expect":[],"source":"audit","note":"English 'as' must not equal normalized 'ass'"}

@@ -1,0 +1,59 @@
+{
+  "name": "hinglish-profanity",
+  "version": "0.1.0",
+  "description": "Profanity detection for English, Hindi (Devanagari) and romanized Hinglish. Returns evidence, not a boolean. Zero dependencies.",
+  "keywords": [
+    "profanity",
+    "hindi",
+    "hinglish",
+    "devanagari",
+    "gaali",
+    "abuse",
+    "moderation",
+    "content-moderation",
+    "filter",
+    "bad-words",
+    "india"
+  ],
+  "license": "MIT",
+  "author": "Naman Mathpal",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathpalnaman/hinglish-profanity.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mathpalnaman/hinglish-profanity/issues"
+  },
+  "homepage": "https://github.com/mathpalnaman/hinglish-profanity#readme",
+  "type": "module",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": false,
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "build": "tsup",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "prepublishOnly": "npm run typecheck && npm run test && npm run build"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.4",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}
