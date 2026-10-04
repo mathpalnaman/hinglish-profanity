@@ -35,3 +35,10 @@ scratch/
 *.raw.json
 *.raw.jsonl
 reviews-export*.json
+
+# Internal working notes — not for consumers of the package.
+# Kept locally, deliberately untracked.
+CLAUDE.md
+AUDIT.md
+notes/
+TODO.md
