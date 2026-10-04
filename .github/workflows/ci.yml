@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        # 18 is the floor declared in package.json engines; 24 is current.
+        node: [18, 20, 22, 24]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+
+      - run: npm ci
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Corpus
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      # A published package is only correct if a stranger can install it.
+      # This catches a broken exports map, which `npm test` cannot see.
+      - name: Install the tarball as a consumer and import it both ways
+        run: |
+          npm pack
+          mkdir -p /tmp/consumer && cd /tmp/consumer
+          npm init -y
+          npm install "$GITHUB_WORKSPACE"/hinglish-profanity-*.tgz
+          node -e "const {detect}=require('hinglish-profanity'); if(!detect('kya chutiya aadmi').matches.length) process.exit(1); console.log('cjs ok')"
+          node --input-type=module -e "import {detect} from 'hinglish-profanity'; if(!detect('l u n d').matches.length) process.exit(1); console.log('esm ok')"

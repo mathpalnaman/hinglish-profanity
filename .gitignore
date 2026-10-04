@@ -42,3 +42,6 @@ CLAUDE.md
 AUDIT.md
 notes/
 TODO.md
+
+# npm pack output
+*.tgz
