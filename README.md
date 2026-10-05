@@ -69,7 +69,7 @@ word, never of the match.
 either the term itself collides with innocent usage (`laura` is a name, `bc` is
 also "before Christ", `pussy` is also a cat) or it was found by a lossy method.
 
-So `laura` used as abuse reports `severity: 4, confidence: "low"` — a maximally
+So `laura` used as abuse reports `severity: 3, confidence: "low"` — a strongly
 offensive word, found unreliably. One number could not say both.
 
 ## What it catches
@@ -126,8 +126,9 @@ detect(text, {
 
 **`vowelDrop` is off for a reason.** Measured on 68 real, clean reviews it
 produced 5 false positives: `badiya` → `bloody`, `Chota`/`Chat`/`choti` →
-`chutia`, `pass` → `piss`. `land` → `lnd` collides with `lund` exactly. Every
-vowel-drop match is reported with `confidence: "low"`.
+`chutia`, `pass` → `piss`. Every vowel-drop match is reported with
+`confidence: "low"`. (It currently also drops `l`, so it cannot reach terms
+like `lund` at all — see [KNOWN_ISSUES.md](KNOWN_ISSUES.md).)
 
 **`score`** is the sum of per-match weights (defaults `{1:1, 2:2, 3:4, 4:8}`),
 with `confidence: "low"` matches counting half. It is **not** a probability and
@@ -141,10 +142,11 @@ negative cases drawn from real reviews:
 
 | | |
 |---|---|
-| total cases | 123 |
-| must be detected | 43 |
-| must pass clean | 78 |
-| known gaps (skipped) | 3 |
+| total cases | 122 |
+| must be detected | 44 |
+| must pass clean | 77 |
+| must throw (`null` input) | 1 |
+| known gaps (skipped, counted in "must be detected") | 3 |
 
 Measured on the current build:
 
@@ -164,6 +166,59 @@ Words that must never match include `analysis`, `assignment`, `assess`,
 npm test
 ```
 
+## Java
+
+The same detector is available for the JVM (Java 17+, zero dependencies), built
+from this repository and served by [JitPack](https://jitpack.io/#mathpalnaman/hinglish-profanity).
+
+```gradle
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+dependencies {
+    implementation 'com.github.mathpalnaman:hinglish-profanity:v0.2.0'
+}
+```
+
+```java
+import io.github.mathpalnaman.hinglishprofanity.*;
+
+Detector detector = HinglishProfanity.defaults();   // build once, share across threads
+Result result = detector.detect("kya chutiya aadmi hai ye");
+Match m = result.matches().get(0);                   // term "chutiya", index 4, endIndex 11
+boolean definite = m.severity() >= 3 && m.confidence() == Confidence.HIGH;
+```
+
+Results are **identical** to the JavaScript package of the same version: the
+Java build reads the same wordlist files, and CI replays about 4,700 recorded
+JavaScript results against it and compares every field. `index` and `endIndex`
+are UTF-16 code units in both, so they work with `String.substring` as they do
+with `String.prototype.slice`.
+
+Options go through a builder, and a `Detector` is immutable once built:
+
+```java
+Detector detector = HinglishProfanity.builder()
+    .langs(Set.of(Lang.EN, Lang.HI_LATIN))
+    .allowlist(List.of("dr lund"))
+    .extraWords(List.of(new Entry("someword", 3)))
+    .build();
+```
+
+Differences from the JavaScript API, all deliberate:
+
+- `detect(null)` throws `NullPointerException` (JavaScript throws `TypeError`).
+- `Confidence` and `Method` are enums. `jsValue()` returns the JavaScript string
+  (`"high"`, `"vowel-drop"`) and `fromJsValue()` parses it back, for storing
+  matches as JSON.
+- `HinglishProfanity.VERSION` and `WORDLIST_HASH` equal the JavaScript exports
+  of the same names when both were built from the same commit.
+
+Java 17 ships older Unicode tables than current Node. For a character added to
+Unicode after version 13, `cleaned` can differ between the two; the cases found
+so far are listed in `ParityTest`.
+
 ## Contributing
 
 Wordlist additions are welcome, with two rules:
@@ -174,6 +229,11 @@ Wordlist additions are welcome, with two rules:
    `wholeTokenOnly`. Recall is easy; not flagging real people is the hard part.
 
 Never edit an existing case to make an implementation pass.
+
+A wordlist or matcher change must keep both implementations in step: run
+`npm run gen:parity` and `cd java && ./gradlew test`. See
+[RELEASING.md](RELEASING.md). Bugs that are known and deliberately not yet
+fixed are in [KNOWN_ISSUES.md](KNOWN_ISSUES.md).
 
 ## License
 

@@ -28,7 +28,7 @@
       "term": "choot",
       "severity": 4,
       "wholeTokenOnly": true,
-      "note": "collapses to 'chot' — prefix of 'choti', 'chota', 'chot' (injury)"
+      "note": "one vowel away from 'chot' (injury), 'choti', 'chota'; safe only because doubled letters are not collapsed mid-word"
     },
     {
       "term": "lund",

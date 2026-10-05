@@ -38,14 +38,13 @@ flowchart TD
     F5 --> G
     C --> G
 
-    G --> G2["dedupe: longest match wins<br/>motherfucker swallows fuck"]
-    G2 --> H
+    G --> H
 
     H{"overlaps an<br/>allowlist phrase?"}
     H -- yes --> H1["discarded"]
-    H -- no --> I["map cleaned positions<br/>back to original offsets"]
+    H -- no --> G2["dedupe: longest match wins<br/>motherfucker swallows fuck"]
 
-    I --> J["<b>DetectResult</b><br/>score · matches[] · cleaned"]
+    G2 --> J["<b>DetectResult</b><br/>score · matches[] · cleaned"]
     J --> K["<i>consumer decides</i><br/>block · queue for review · ignore"]
 
     style C fill:#2d5016,color:#fff
