@@ -1,0 +1,3 @@
+# Wordlists and fixtures are hashed and diffed byte-for-byte across platforms.
+*.json  text eol=lf
+*.jsonl text eol=lf
