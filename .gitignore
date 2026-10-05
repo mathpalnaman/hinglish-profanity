@@ -45,3 +45,7 @@ TODO.md
 
 # npm pack output
 *.tgz
+
+# Java build output (the Gradle wrapper itself is committed)
+java/build/
+java/.gradle/

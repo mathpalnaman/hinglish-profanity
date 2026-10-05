@@ -1,0 +1,288 @@
+import groovy.json.JsonSlurper
+import java.security.MessageDigest
+
+plugins {
+    id 'java-library'
+    id 'maven-publish'
+}
+
+/*
+ * This build lives in java/ but shares its inputs with the JavaScript package
+ * one directory up: the wordlists, the test corpus, the parity fixture and the
+ * version number all have exactly one copy, in the repository root.
+ */
+def repoRoot = rootDir.parentFile
+def wordlistDir = new File(repoRoot, 'src/wordlists')
+
+/* The version has one home: package.json. */
+def baseVersion = new JsonSlurper().parse(new File(repoRoot, 'package.json'), 'UTF-8').version as String
+
+/*
+ * JitPack builds from a git tag and serves the artifact under that tag, so on
+ * JitPack the publication takes JitPack's VERSION. checkVersion (below) makes
+ * sure a version tag agrees with package.json.
+ */
+def onJitPack = System.getenv('JITPACK') == 'true'
+def jitpackVersion = System.getenv('VERSION')
+
+group = 'io.github.mathpalnaman'
+version = (onJitPack && jitpackVersion) ? jitpackVersion : baseVersion
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+    withSourcesJar()
+    withJavadocJar()
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    /* Zero runtime dependencies. Everything below is test scope. */
+    testImplementation platform('org.junit:junit-bom:5.11.3')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
+    testImplementation 'com.networknt:json-schema-validator:1.5.3'
+}
+
+/* ------------------------------------------------------------------ *
+ * Version check
+ * ------------------------------------------------------------------ */
+
+def checkVersion = tasks.register('checkVersion') {
+    description = 'Fails if the version being built disagrees with package.json.'
+    group = 'verification'
+    def projectVersion = project.version.toString()
+    inputs.property('baseVersion', baseVersion)
+    inputs.property('projectVersion', projectVersion)
+    inputs.property('onJitPack', onJitPack)
+    doLast {
+        if (!onJitPack) {
+            if (projectVersion != baseVersion) {
+                throw new GradleException("Version mismatch: building ${projectVersion} but package.json says ${baseVersion}.")
+            }
+            return
+        }
+        // v0.2.0 or v0.2.0-rc.1 for package.json 0.2.0.
+        def expected = ~("v" + java.util.regex.Pattern.quote(baseVersion) + /(-rc\.\d+)?/)
+        if (projectVersion ==~ expected) return
+        // Anything else that looks like a version tag is a real mismatch. A
+        // commit hash or branch snapshot is not a release and is let through.
+        if (projectVersion ==~ /v?\d+\.\d+.*/) {
+            throw new GradleException(
+                "Tag ${projectVersion} does not match package.json version ${baseVersion} " +
+                "(expected v${baseVersion} or v${baseVersion}-rc.N).")
+        }
+        logger.warn("hinglish-profanity: JitPack build of non-release ref '${projectVersion}' (package.json ${baseVersion}).")
+    }
+}
+
+/* ------------------------------------------------------------------ *
+ * Wordlists: validate, flatten, stamp
+ * ------------------------------------------------------------------ */
+
+def generatedSources = layout.buildDirectory.dir('generated/sources/buildinfo')
+def generatedResources = layout.buildDirectory.dir('generated/resources/wordlists')
+def javaPackage = 'io.github.mathpalnaman.hinglishprofanity'
+def javaPackagePath = javaPackage.replace('.', '/')
+
+/*
+ * Reads ../src/wordlists/*.json and emits
+ *   - wordlists.tsv, one entry per line, so the jar needs no JSON parser
+ *   - BuildInfo.java, carrying VERSION and WORDLIST_HASH
+ *
+ * It fails the build if a wordlist violates src/wordlists/schema.json. The
+ * rules are restated here by hand (Gradle has no JSON Schema validator and the
+ * library takes no dependencies); SchemaTest validates the same files against
+ * the real schema.json so the two cannot drift apart unnoticed.
+ */
+def generateWordlists = tasks.register('generateWordlists') {
+    description = 'Validates the shared wordlists and generates wordlists.tsv and BuildInfo.java.'
+    inputs.dir(wordlistDir).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.property('version', baseVersion)
+    outputs.dir(generatedSources)
+    outputs.dir(generatedResources)
+
+    doLast {
+        def langs = ['en', 'hi-deva', 'hi-latin']
+        def topKeys = ['$schema', 'lang', 'note', 'terms', 'phrases', 'excluded'] as Set
+        def entryKeys = ['term', 'severity', 'wholeTokenOnly', 'ambiguous', 'note'] as Set
+
+        def checkEntry = { String file, String where, Object e ->
+            def fail = { String msg ->
+                throw new GradleException("Wordlist ${file} violates schema.json at ${where}: ${msg}")
+            }
+            if (!(e instanceof Map)) fail('entry must be an object')
+            def unknown = (e.keySet() as Set) - entryKeys
+            if (unknown) fail("unknown properties ${unknown}")
+            if (!(e.term instanceof String)) fail('"term" is required and must be a string')
+            String term = e.term
+            if (term.codePointCount(0, term.length()) < 2) fail("\"term\" must be at least 2 characters, got \"${term}\"")
+            if (!(e.severity instanceof Integer) || e.severity < 1 || e.severity > 4) {
+                fail("\"severity\" is required and must be 1, 2, 3 or 4, got ${e.severity} (\"${term}\")")
+            }
+            ['wholeTokenOnly', 'ambiguous'].each { key ->
+                if (e.containsKey(key) && !(e[key] instanceof Boolean)) fail("\"${key}\" must be a boolean (\"${term}\")")
+            }
+            if (e.containsKey('note') && !(e.note instanceof String)) fail("\"note\" must be a string (\"${term}\")")
+            // Not a schema rule: the generated file is tab- and line-delimited.
+            if (term =~ /[\t\r\n]/) fail("\"term\" must not contain a tab or line break (\"${term}\")")
+        }
+
+        def parsed = [:]
+        langs.each { String lang ->
+            def name = "${lang}.json"
+            def file = new File(wordlistDir, name)
+            if (!file.isFile()) throw new GradleException("Missing wordlist ${file}")
+            def fail = { String msg -> throw new GradleException("Wordlist ${name} violates schema.json: ${msg}") }
+
+            def json = new JsonSlurper().parse(file, 'UTF-8')
+            if (!(json instanceof Map)) fail('root must be an object')
+            def unknown = (json.keySet() as Set) - topKeys
+            if (unknown) fail("unknown properties ${unknown}")
+            if (!(json.lang in langs)) fail("\"lang\" is required and must be one of ${langs}, got ${json.lang}")
+            if (json.lang != lang) fail("\"lang\" is ${json.lang} but the file is ${name}")
+            if (json.containsKey('$schema') && !(json.'$schema' instanceof String)) fail('"$schema" must be a string')
+            if (json.containsKey('note') && !(json.note instanceof String)) fail('"note" must be a string')
+            if (!(json.terms instanceof List) || json.terms.isEmpty()) fail('"terms" is required and must be a non-empty array')
+            if (json.containsKey('phrases') && !(json.phrases instanceof List)) fail('"phrases" must be an array')
+            if (json.containsKey('excluded')) {
+                def ex = json.excluded
+                if (!(ex instanceof Map)) fail('"excluded" must be an object')
+                def exUnknown = (ex.keySet() as Set) - (['note', 'terms'] as Set)
+                if (exUnknown) fail("\"excluded\" has unknown properties ${exUnknown}")
+                if (!(ex.terms instanceof List) || ex.terms.any { !(it instanceof String) }) {
+                    fail('"excluded.terms" is required and must be an array of strings')
+                }
+                if (ex.containsKey('note') && !(ex.note instanceof String)) fail('"excluded.note" must be a string')
+            }
+            json.terms.eachWithIndex { e, i -> checkEntry(name, "terms[${i}]", e) }
+            (json.phrases ?: []).eachWithIndex { e, i -> checkEntry(name, "phrases[${i}]", e) }
+            parsed[lang] = json
+        }
+
+        // The order the JS matcher walks its lists in (src/match.ts WORDLISTS).
+        // Match order depends on it, so it is fixed here rather than sorted.
+        def rows = new StringBuilder()
+        def row = { String lang, String kind, Map e ->
+            rows << [lang, kind, e.severity, e.wholeTokenOnly == true ? 1 : 0, e.ambiguous == true ? 1 : 0, e.term].join('\t') << '\n'
+        }
+        ['en', 'hi-latin', 'hi-deva'].each { String lang ->
+            parsed[lang].terms.each { row(lang, 'T', it) }
+            (parsed[lang].phrases ?: []).each { row(lang, 'P', it) }
+        }
+
+        // WORDLIST_HASH: SHA-256 over the raw bytes, sorted filename order. The
+        // JS build computes the same thing in scripts/stamp.mjs.
+        def digest = MessageDigest.getInstance('SHA-256')
+        langs.each { digest.update(new File(wordlistDir, "${it}.json").bytes) }
+        def hash = digest.digest().encodeHex().toString().substring(0, 12)
+
+        def resourceDir = new File(generatedResources.get().asFile, javaPackagePath)
+        resourceDir.mkdirs()
+        new File(resourceDir, 'wordlists.tsv').setText(rows.toString(), 'UTF-8')
+
+        def sourceDir = new File(generatedSources.get().asFile, javaPackagePath)
+        sourceDir.mkdirs()
+        new File(sourceDir, 'BuildInfo.java').setText("""\
+package ${javaPackage};
+
+/** Generated by the generateWordlists Gradle task. Do not edit. */
+final class BuildInfo {
+
+  private BuildInfo() {}
+
+  // Methods, not constants: a compile-time constant would be inlined into
+  // consumer bytecode and go stale when the jar is swapped.
+  static String version() {
+    return "${baseVersion}";
+  }
+
+  static String wordlistHash() {
+    return "${hash}";
+  }
+}
+""", 'UTF-8')
+    }
+}
+
+sourceSets {
+    main {
+        java { srcDir generateWordlists.map { generatedSources.get() } }
+        resources { srcDir generateWordlists.map { generatedResources.get() } }
+    }
+}
+
+/* ------------------------------------------------------------------ *
+ * Compile, test, package
+ * ------------------------------------------------------------------ */
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    options.release = 17
+    dependsOn checkVersion
+}
+
+tasks.named('javadoc') {
+    options.encoding = 'UTF-8'
+    options.addStringOption('Xdoclint:none', '-quiet')
+}
+
+tasks.named('jar') {
+    manifest {
+        attributes(
+            'Automatic-Module-Name': javaPackage,
+            'Implementation-Title': 'hinglish-profanity',
+            'Implementation-Version': baseVersion,
+        )
+    }
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+    // Tests read the shared fixtures straight from the repository root.
+    systemProperty 'repoRoot', repoRoot.absolutePath
+    systemProperty 'file.encoding', 'UTF-8'
+    inputs.dir(new File(repoRoot, 'test/fixtures')).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.dir(wordlistDir).withPathSensitivity(PathSensitivity.RELATIVE)
+    inputs.file(new File(repoRoot, 'package.json'))
+    testLogging {
+        events 'failed'
+        exceptionFormat = 'short'
+        showStandardStreams = true
+    }
+    afterSuite { desc, result ->
+        if (desc.parent == null) {
+            println "Tests: ${result.testCount} total, ${result.successfulTestCount} passed, " +
+                    "${result.failedTestCount} failed, ${result.skippedTestCount} skipped"
+        }
+    }
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifactId = 'hinglish-profanity'
+            from components.java
+            pom {
+                name = 'hinglish-profanity'
+                description = 'Profanity detection for English, Hindi (Devanagari) and romanized Hinglish. Returns evidence, not a boolean. Zero dependencies.'
+                url = 'https://github.com/mathpalnaman/hinglish-profanity'
+                licenses {
+                    license {
+                        name = 'MIT'
+                        url = 'https://opensource.org/licenses/MIT'
+                    }
+                }
+                scm {
+                    url = 'https://github.com/mathpalnaman/hinglish-profanity'
+                    connection = 'scm:git:https://github.com/mathpalnaman/hinglish-profanity.git'
+                }
+            }
+        }
+    }
+}
