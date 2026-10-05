@@ -39,6 +39,18 @@ export type {
 
 export { normalize, normalizeTerm } from "./normalize";
 
+declare const __VERSION__: string;
+declare const __WORDLIST_HASH__: string;
+
+/** Package version, identical to the Java artifact built from the same tag. */
+export const VERSION: string = __VERSION__;
+
+/**
+ * First 12 hex chars of SHA-256 over the three wordlist files. Two builds with
+ * the same hash match the same terms, whatever language they are written in.
+ */
+export const WORDLIST_HASH: string = __WORDLIST_HASH__;
+
 /** Default score weights. Doubling per level: one level-4 hit outranks any pile of level-1s. */
 export const DEFAULT_WEIGHTS: Record<Severity, number> = { 1: 1, 2: 2, 3: 4, 4: 8 };
 

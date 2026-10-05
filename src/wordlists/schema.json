@@ -41,7 +41,7 @@
       "additionalProperties": false,
       "properties": {
         "term": {
-          "description": "Canonical spelling. Must survive the normalizer unchanged, or it can never match.",
+          "description": "Canonical spelling, reported as Match.term. It is normalized the same way as input before comparison (so 'lund' is stored as-is and compared as 'iund'); detect(term) must report the term itself at index 0.",
           "type": "string",
           "minLength": 2
         },

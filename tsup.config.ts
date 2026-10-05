@@ -1,5 +1,7 @@
 import { defineConfig } from "tsup";
 
+import { defines } from "./scripts/stamp.mjs";
+
 export default defineConfig({
   /* One entry point. Everything else is internal. */
   entry: ["src/index.ts"],
@@ -25,4 +27,7 @@ export default defineConfig({
   sourcemap: true,
 
   clean: true,
+
+  /* VERSION and WORDLIST_HASH, computed once per build. See scripts/stamp.mjs. */
+  define: defines(),
 });

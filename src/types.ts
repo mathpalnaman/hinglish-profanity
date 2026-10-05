@@ -83,7 +83,7 @@ export interface DetectResult {
 
 /** A single wordlist entry, as stored in `src/wordlists/*.json`. */
 export interface WordlistEntry {
-  /** Canonical spelling. Must survive the normalizer unchanged. */
+  /** Canonical spelling. `detect(term)` must report the term itself at index 0. */
   term: string;
   severity: Severity;
   /**
