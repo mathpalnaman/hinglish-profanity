@@ -1,0 +1,50 @@
+name: Release Java to Maven Central
+
+# Runs when a release tag is pushed. It uploads a signed bundle to the Central
+# Portal and stops: the release itself is a manual "Publish" click at
+# https://central.sonatype.com/publishing/deployments, because a Maven Central
+# release can never be replaced or deleted.
+#
+# Needs four repository secrets (see RELEASING.md):
+#   MAVEN_CENTRAL_USERNAME, MAVEN_CENTRAL_PASSWORD  - Central Portal user token
+#   SIGNING_KEY, SIGNING_PASSWORD                   - armored GPG private key and its passphrase
+
+on:
+  push:
+    tags: ['v[0-9]+.[0-9]+.[0-9]+']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # package.json is the only place the version is written, and Gradle reads
+      # it from there. A tag that disagrees would publish the wrong version.
+      - name: Tag matches package.json
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if [ "v$version" != "$GITHUB_REF_NAME" ]; then
+            echo "Tag $GITHUB_REF_NAME does not match package.json version $version" >&2
+            exit 1
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Test
+        working-directory: java
+        run: ./gradlew test
+
+      - name: Sign and upload to the Central Portal
+        working-directory: java
+        run: ./gradlew publishToMavenCentral
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.SIGNING_KEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}

@@ -4,8 +4,9 @@
 
 ### Added
 
-- **Java port** (`java/`, Java 17+, zero dependencies), published through
-  JitPack from the same git tags as the npm package. It reads the same wordlist
+- **Java port** (`java/`, Java 17+, zero dependencies), published to Maven
+  Central as `io.github.mathpalnaman:hinglish-profanity`, with the same version
+  number as the npm package. It reads the same wordlist
   files and returns the same results as the JavaScript package: CI replays
   about 4,700 recorded JavaScript results against it. See README, "Java".
 - `VERSION` and `WORDLIST_HASH` exports (JavaScript), and

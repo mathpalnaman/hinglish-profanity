@@ -169,16 +169,23 @@ npm test
 ## Java
 
 The same detector is available for the JVM (Java 17+, zero dependencies), built
-from this repository and served by [JitPack](https://jitpack.io/#mathpalnaman/hinglish-profanity).
+from this repository and published to Maven Central.
 
 ```gradle
 repositories {
     mavenCentral()
-    maven { url 'https://jitpack.io' }
 }
 dependencies {
-    implementation 'com.github.mathpalnaman:hinglish-profanity:v0.2.0'
+    implementation 'io.github.mathpalnaman:hinglish-profanity:0.2.0'
 }
+```
+
+```xml
+<dependency>
+  <groupId>io.github.mathpalnaman</groupId>
+  <artifactId>hinglish-profanity</artifactId>
+  <version>0.2.0</version>
+</dependency>
 ```
 
 ```java

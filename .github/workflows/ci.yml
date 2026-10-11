@@ -71,7 +71,8 @@ jobs:
         working-directory: java
         run: ./gradlew test
 
-      # What JitPack runs (jitpack.yml), so a broken publication fails here first.
+      # Builds the same jars and POM a release uploads (unsigned here: CI on a
+      # branch has no key), so a broken publication fails before a tag does.
       - name: Build and publish to the local Maven repository
         working-directory: java
         run: ./gradlew clean build publishToMavenLocal -x test

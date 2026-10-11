@@ -3,7 +3,7 @@ import java.security.MessageDigest
 
 plugins {
     id 'java-library'
-    id 'maven-publish'
+    id 'com.vanniktech.maven.publish' version '0.34.0'
 }
 
 /*
@@ -17,23 +17,13 @@ def wordlistDir = new File(repoRoot, 'src/wordlists')
 /* The version has one home: package.json. */
 def baseVersion = new JsonSlurper().parse(new File(repoRoot, 'package.json'), 'UTF-8').version as String
 
-/*
- * JitPack builds from a git tag and serves the artifact under that tag, so on
- * JitPack the publication takes JitPack's VERSION. checkVersion (below) makes
- * sure a version tag agrees with package.json.
- */
-def onJitPack = System.getenv('JITPACK') == 'true'
-def jitpackVersion = System.getenv('VERSION')
-
 group = 'io.github.mathpalnaman'
-version = (onJitPack && jitpackVersion) ? jitpackVersion : baseVersion
+version = baseVersion
 
 java {
     toolchain {
         languageVersion = JavaLanguageVersion.of(17)
     }
-    withSourcesJar()
-    withJavadocJar()
 }
 
 repositories {
@@ -47,38 +37,6 @@ dependencies {
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     testImplementation 'com.fasterxml.jackson.core:jackson-databind:2.18.1'
     testImplementation 'com.networknt:json-schema-validator:1.5.3'
-}
-
-/* ------------------------------------------------------------------ *
- * Version check
- * ------------------------------------------------------------------ */
-
-def checkVersion = tasks.register('checkVersion') {
-    description = 'Fails if the version being built disagrees with package.json.'
-    group = 'verification'
-    def projectVersion = project.version.toString()
-    inputs.property('baseVersion', baseVersion)
-    inputs.property('projectVersion', projectVersion)
-    inputs.property('onJitPack', onJitPack)
-    doLast {
-        if (!onJitPack) {
-            if (projectVersion != baseVersion) {
-                throw new GradleException("Version mismatch: building ${projectVersion} but package.json says ${baseVersion}.")
-            }
-            return
-        }
-        // v0.2.0 or v0.2.0-rc.1 for package.json 0.2.0.
-        def expected = ~("v" + java.util.regex.Pattern.quote(baseVersion) + /(-rc\.\d+)?/)
-        if (projectVersion ==~ expected) return
-        // Anything else that looks like a version tag is a real mismatch. A
-        // commit hash or branch snapshot is not a release and is let through.
-        if (projectVersion ==~ /v?\d+\.\d+.*/) {
-            throw new GradleException(
-                "Tag ${projectVersion} does not match package.json version ${baseVersion} " +
-                "(expected v${baseVersion} or v${baseVersion}-rc.N).")
-        }
-        logger.warn("hinglish-profanity: JitPack build of non-release ref '${projectVersion}' (package.json ${baseVersion}).")
-    }
 }
 
 /* ------------------------------------------------------------------ *
@@ -224,7 +182,6 @@ sourceSets {
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
     options.release = 17
-    dependsOn checkVersion
 }
 
 tasks.named('javadoc') {
@@ -263,26 +220,50 @@ tasks.named('test') {
     }
 }
 
-publishing {
-    publications {
-        maven(MavenPublication) {
-            artifactId = 'hinglish-profanity'
-            from components.java
-            pom {
-                name = 'hinglish-profanity'
-                description = 'Profanity detection for English, Hindi (Devanagari) and romanized Hinglish. Returns evidence, not a boolean. Zero dependencies.'
-                url = 'https://github.com/mathpalnaman/hinglish-profanity'
-                licenses {
-                    license {
-                        name = 'MIT'
-                        url = 'https://opensource.org/licenses/MIT'
-                    }
-                }
-                scm {
-                    url = 'https://github.com/mathpalnaman/hinglish-profanity'
-                    connection = 'scm:git:https://github.com/mathpalnaman/hinglish-profanity.git'
-                }
+/* ------------------------------------------------------------------ *
+ * Publishing to Maven Central
+ * ------------------------------------------------------------------ */
+
+/*
+ * `./gradlew publishToMavenCentral` signs everything, uploads one bundle to
+ * the Central Portal and stops there: the release itself is a manual "Publish"
+ * click at central.sonatype.com, because a Central release can never be
+ * replaced or deleted. See RELEASING.md for the credentials this needs.
+ *
+ * Signing is only wired up when a key is supplied, so `build` and
+ * `publishToMavenLocal` work on a machine (or a CI job) that has none.
+ */
+mavenPublishing {
+    publishToMavenCentral()
+    if (providers.gradleProperty('signingInMemoryKey').getOrElse('').trim()) {
+        signAllPublications()
+    }
+
+    coordinates('io.github.mathpalnaman', 'hinglish-profanity', baseVersion)
+
+    pom {
+        name = 'hinglish-profanity'
+        description = 'Profanity detection for English, Hindi (Devanagari) and romanized Hinglish. Returns evidence, not a boolean. Zero dependencies.'
+        inceptionYear = '2026'
+        url = 'https://github.com/mathpalnaman/hinglish-profanity'
+        licenses {
+            license {
+                name = 'MIT'
+                url = 'https://opensource.org/licenses/MIT'
+                distribution = 'repo'
             }
+        }
+        developers {
+            developer {
+                id = 'mathpalnaman'
+                name = 'Naman Mathpal'
+                url = 'https://github.com/mathpalnaman'
+            }
+        }
+        scm {
+            url = 'https://github.com/mathpalnaman/hinglish-profanity'
+            connection = 'scm:git:https://github.com/mathpalnaman/hinglish-profanity.git'
+            developerConnection = 'scm:git:ssh://git@github.com/mathpalnaman/hinglish-profanity.git'
         }
     }
 }
